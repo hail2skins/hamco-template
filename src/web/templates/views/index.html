@@ -1,0 +1,13 @@
+{{ define "views/index.html" }}
+
+<!--Emded the header.html template at this location-->
+{{ template "layouts/header.html" . }}
+<!--Embed the menu.html template at this location-->
+{{ template "layouts/menu.html" . }}
+<!--Embed the index-body.html template at this location -->
+{{ template "pages/index-body.html" . }}
+<!--Embed the index-main.html template at this location and this will be the work part-->
+{{ template "pages/index-main.html" . }}
+<!--Embed the footer.html template at this location-->
+{{ template "layouts/footer.html" .}}
+{{ end }}

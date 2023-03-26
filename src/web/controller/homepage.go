@@ -10,6 +10,7 @@ func Router(r *gin.Engine) {
 	r.GET("/", index)
 	r.GET("/contact", contact)
 	r.GET("/about", about)
+	r.GET("/post", post)
 }
 
 func index(c *gin.Context) {
@@ -38,6 +39,16 @@ func contact(c *gin.Context) {
 		"views/contact.html",
 		gin.H{
 			"title": "Contact",
+		},
+	)
+}
+
+func post(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"views/post.html",
+		gin.H{
+			"title": "Post",
 		},
 	)
 }

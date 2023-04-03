@@ -17,7 +17,7 @@ func Connect() {
 	password := os.Getenv("DB_PASSWORD")
 	databaseName := os.Getenv("DB_NAME")
 	port := os.Getenv("DB_PORT")
-	sslrootcert := os.Getenv("DB_SSLROOTCERT")
+	sslrootcert := os.Getenv("DB_SSLROOTCERT") // at render.com this has to be in the root of the folder so different env.local location than here
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=verify-full sslrootcert=%s TimeZone=America/Chicago", host, username, password, databaseName, port, sslrootcert)
 	Database, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})

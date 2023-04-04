@@ -4,6 +4,7 @@ import (
 	"log"
 	"web/controller"
 	"web/database"
+	"web/middleware"
 	"web/model"
 
 	"github.com/joho/godotenv"
@@ -49,6 +50,11 @@ func serveApplication() {
 	publicRoutes := r.Group("/auth")
 	publicRoutes.POST("/register", controller.Register)
 	publicRoutes.POST("/login", controller.Login)
+
+	protectedRoutes := r.Group("/api")
+	protectedRoutes.Use(middleware.JWTAuthMiddleware())
+	protectedRoutes.POST("/post", controller.AddPost)
+	protectedRoutes.GET("/post", controller.GetAllPosts)
 
 	log.Println("Server started")
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

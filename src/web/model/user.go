@@ -46,3 +46,12 @@ func FindUserByUsername(username string) (User, error) {
 	}
 	return user, nil
 }
+
+func FindUserByID(id uint) (User, error) {
+	var user User
+	err := database.Database.Preload("Posts").Where("ID=?", id).Find(&user).Error
+	if err != nil {
+		return User{}, err
+	}
+	return user, nil
+}

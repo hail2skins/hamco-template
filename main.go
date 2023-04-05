@@ -4,13 +4,14 @@ import (
 	"log"
 
 	"hamco-template/controllers"
+	"hamco-template/setup"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	//setup.LoadEnv()
-	//setup.LoadDatabase()
+	setup.LoadEnv()
+	setup.LoadDatabase()
 	serveApplication()
 }
 

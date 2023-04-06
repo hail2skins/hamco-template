@@ -1,0 +1,23 @@
+{{ define "pages/new-note-main.html" }}
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+
+                <form class="row g-3" action="/notes" method="POST">
+                    <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="title" class="form-control" id="title" aria-describedby="titleHelp" name="title">
+                    <div id="titleHelp" class="form-text">Title of the note</div>
+                    </div>
+                    <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" rows="5" name="content"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{{ end }}

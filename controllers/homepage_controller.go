@@ -6,47 +6,40 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router(r *gin.Engine) {
-	r.GET("/", index)
-	r.GET("/contact", contact)
-	r.GET("/about", about)
-	r.GET("/post", post)
-}
-
-func index(c *gin.Context) {
+func Index(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
-		"views/index.html",
+		"home/index.html",
 		gin.H{
 			"title": "Hamco Internet Solutions",
 		},
 	)
 }
 
-func about(c *gin.Context) {
+func About(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
-		"views/about.html",
+		"home/about.html",
 		gin.H{
 			"title": "About",
 		},
 	)
 }
 
-func contact(c *gin.Context) {
+func Contact(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
-		"views/contact.html",
+		"home/contact.html",
 		gin.H{
 			"title": "Contact",
 		},
 	)
 }
 
-func post(c *gin.Context) {
+func Post(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
-		"views/post.html",
+		"home/post.html",
 		gin.H{
 			"title": "Post",
 		},

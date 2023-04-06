@@ -11,8 +11,16 @@
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/about">About</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/post">Sample Post</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/notes">History</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/contact">Contact</a></li>
+                        {{ if .logged_in }}
+                            <form action="/logout" method="post">
+                                <li class="nav-item"><button type="submit" class="btn btn-danger nav-link px-lg-3 py-3 py-lg-4">Logout</button></li>
+                            </form>
+                        {{ else }}
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/signup" class="btn btn-primary-outline">Sign Up</a></li>
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/login" class="btn btn-primary-outline">Login</a></li>
+                        {{ end }}
                     </ul>
                 </div>
             </div>

@@ -4,8 +4,11 @@ import (
 	"log"
 
 	"hamco-template/controllers"
+	"hamco-template/middlewares"
 	"hamco-template/setup"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,17 +24,30 @@ func serveApplication() {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	r.LoadHTMLGlob("templates/**/**")
+	// Sessions init
+	store := memstore.NewStore([]byte("secret"))
+	r.Use(sessions.Sessions("notes", store))
+
+	r.Use(middlewares.AuthenticateUser())
+
+	r.LoadHTMLGlob("templates/**/*")
 
 	r.GET("/", controllers.Index)
 	r.GET("/contact", controllers.Contact)
 	r.GET("/about", controllers.About)
 	r.GET("/post", controllers.Post)
+	r.GET("/login", controllers.LoginPage)
+	r.GET("/signup", controllers.SignupPage)
+	r.POST("/signup", controllers.Signup)
+	r.POST("/login", controllers.Login)
+	r.POST("/logout", controllers.Logout)
 
 	notes := r.Group("/notes")
 	{
 		notes.GET("/", controllers.NotesIndex)
 		notes.GET("/new", controllers.NotesNew)
+		notes.POST("/", controllers.NotesCreate)
+		notes.GET("/:id", controllers.NotesShow)
 	}
 	r.Static("/css", "./static/css")
 	r.Static("/img", "./static/img")

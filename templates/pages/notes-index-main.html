@@ -1,0 +1,31 @@
+{{ define "pages/notes-index-main.html" }}    
+    
+    <!-- Notes index-->
+    <h1>Listing Notes</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Published</th>
+            </tr>
+        </thead>
+
+  <tbody>
+    
+      {{ range .notes }}
+        <tr>
+          <td><a href="/notes/{{ .ID }}">{{ .Title }}</a></td>
+          <td>{{ .Content }}</td>
+          <td> {{ .Published }}</td>
+        </tr>
+      {{ else }}
+        <tr>
+          <td colspan="3">No notes yet</td>
+        </tr>
+      {{ end }}
+    
+</table>
+
+{{ end }}

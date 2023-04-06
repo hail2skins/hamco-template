@@ -18,3 +18,15 @@ func NotesAll() *[]Note {
 	database.Database.Where("deleted_at is NULL").Order("updated_at desc").Find(&notes)
 	return &notes
 }
+
+func NotesCreate(user *User, title string, content string) *Note {
+	entry := Note{Title: title, Content: content, UserID: user.ID}
+	database.Database.Create(&entry)
+	return &entry
+}
+
+func NotesFind(id uint64) *Note {
+	var note Note
+	database.Database.Where("id = ?", id).First(&note)
+	return &note
+}

@@ -28,6 +28,10 @@ func AuthenticateUser() gin.HandlerFunc {
 			c.Set("user_id", user.ID)
 			c.Set("email", user.Username)
 		}
+
+		// Set the logged_in value in the gin.Context for use in templates and controllers
+		c.Set("logged_in", userPresent)
+
 		c.Next()
 	}
 }

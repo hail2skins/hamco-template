@@ -8,6 +8,7 @@ Almost complete with the template.
 
 Temporarily blocked any signups as I don't need any.  
 
-There is an issue with creating notes taking you to the not logged in path even though the note was created.
+Closer.  Many helper functions added.  Cleared a couple weird issues.  Problem now is on auth failure it takes you to the right page, but the wrong way.
 
-Many other things too.  Will get to it eventually.
+I think I need to take you to that page again through the controller, but am entering a loop due to helpers.  May have to re-organize here.
+

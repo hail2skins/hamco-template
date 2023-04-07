@@ -8,6 +8,8 @@
 {{ template "pages/index-body.html" . }}
 <!--Embed the index-main.html template at this location and this will be the work part-->
 {{ template "pages/index-main.html" . }}
+<!-- Embed the delete_script JS template at this location -->
+{{ template "partials/delete_script.html" . }}
 <!--Embed the footer.html template at this location-->
 {{ template "layouts/footer.html" .}}
 {{ end }}

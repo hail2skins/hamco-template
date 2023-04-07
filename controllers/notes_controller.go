@@ -10,68 +10,42 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// NoteView is a struct to hold the note and the published date which is formatted in the NotesIndex function
-type NoteView struct {
-	models.Note
-	Published string
-}
-
 func NotesIndex(c *gin.Context) {
 	notes := models.NotesAll()
-	// Create a slice of NoteView structs
-	var noteViews []NoteView
-	// Loop through the notes and create a NoteView struct for each note
-	for _, note := range *notes {
-		// Format the date
-		published := note.UpdatedAt.Format("Jan 2, 2006")
-		noteView := NoteView{
-			Note:      note,
-			Published: published,
-		}
-		noteViews = append(noteViews, noteView)
-	}
+	noteViews := helpers.NotesToNoteViews(notes)
 	c.HTML(
 		http.StatusOK,
 		"note/index.html",
 		gin.H{
 			// Pass the slice of NoteView structs to the template rather than the notes directly
-			"notes": noteViews,
+			"notes":     noteViews,
+			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
 }
 
 func NotesNew(c *gin.Context) {
-
 	c.HTML(
 		http.StatusOK,
 		"note/new.html",
 		gin.H{
-			"title": "New Note",
+			"title":     "New Note",
+			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
 }
 
 func NotesCreate(c *gin.Context) {
-	// Declare the currentUser variable
-	currentUser := helpers.GetUserFromRequest(c)
-	// Check if the user is logged in
-	if currentUser == nil || currentUser.ID == 0 {
-		c.HTML(
-			http.StatusUnauthorized,
-			"note/index.html",
-			gin.H{
-				"alert": "You must be logged in to create a note",
-			},
-		)
-		return
+	currentUser := helpers.RequireLoggedInUser(c)
+	if currentUser != nil {
+		// Can do this through a bind.  See go-gin-bootcamp repo for actual code
+		title := c.PostForm("title")
+		content := c.PostForm("content")
+		// call the model to create the note
+		models.NotesCreate(currentUser, title, content)
+		// redirect to the notes index
+		c.Redirect(http.StatusMovedPermanently, "/")
 	}
-	// Can do this through a bind.  See go-gin-bootcamp repo for actual code
-	title := c.PostForm("title")
-	content := c.PostForm("content")
-	// call the model to create the note
-	models.NotesCreate(currentUser, title, content)
-	// redirect to the notes index
-	c.Redirect(http.StatusMovedPermanently, "/")
 }
 
 func NotesShow(c *gin.Context) {
@@ -88,6 +62,58 @@ func NotesShow(c *gin.Context) {
 		gin.H{
 			"note":      note,
 			"published": published,
+			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
+}
+
+func NotesEditPage(c *gin.Context) {
+	currentUser := helpers.RequireLoggedInUser(c)
+	if currentUser != nil {
+		idStr := c.Param("id")
+		//fmt.Printf("ID string: %s\n", idStr) // Debugging statement
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			fmt.Printf("Error parsing note id: %v\n", err)
+		}
+		//fmt.Printf("Parsed ID: %d\n", id) // Debugging statement
+		note := models.NotesFindByUser(currentUser, id)
+		c.HTML(
+			http.StatusOK,
+			"note/edit.html",
+			gin.H{
+				"note":      note,
+				"logged_in": c.MustGet("logged_in").(bool),
+			},
+		)
+	}
+}
+
+func NotesUpdate(c *gin.Context) {
+	currentUser := helpers.RequireLoggedInUser(c)
+	if currentUser != nil {
+		idStr := c.Param("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			fmt.Printf("Error parsing note id: %v\n", err)
+		}
+		note := models.NotesFindByUser(currentUser, id)
+		title := c.PostForm("title")
+		content := c.PostForm("content")
+		note.Update(title, content)
+		c.Redirect(http.StatusMovedPermanently, "/notes/"+idStr)
+	}
+}
+
+func NotesDelete(c *gin.Context) {
+	currentUser := helpers.RequireLoggedInUser(c)
+	if currentUser != nil {
+		idStr := c.Param("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			fmt.Printf("Error parsing note id: %v\n", err)
+		}
+		models.NotesMarkDelete(currentUser, id)
+		c.Redirect(http.StatusMovedPermanently, "/notes")
+	}
 }

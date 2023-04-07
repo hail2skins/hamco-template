@@ -30,3 +30,27 @@ func NotesFind(id uint64) *Note {
 	database.Database.Where("id = ?", id).First(&note)
 	return &note
 }
+
+func NotesFindByUser(user *User, id uint64) *Note {
+	var note Note
+	database.Database.Where("id = ? AND user_id = ?", id, user.ID).First(&note)
+	return &note
+}
+
+// NotesLastFive returns the last five notes and is designed for the home index page.
+func NotesLastFive() *[]Note {
+	var notes []Note
+	database.Database.Where("deleted_at is NULL").Order("updated_at desc").Limit(5).Find(&notes)
+	return &notes
+}
+
+func (note *Note) Update(title string, content string) {
+	note.Title = title
+	note.Content = content
+	database.Database.Save(&note)
+}
+
+func NotesMarkDelete(user *User, id uint64) {
+	// Update notes set deleted_at == Current Time> Where id = id and user_id = user_id
+	database.Database.Where("id = ? AND user_id = ?", id, user.ID).Delete(&Note{})
+}

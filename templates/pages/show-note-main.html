@@ -1,5 +1,8 @@
 {{ define "pages/show-note-main.html" }}    
-    
+{{ if .logged_in }}
+<a class="btn btn-outline-primary" href="/notes/edit/{{ .note.ID }}" role="button">Edit Note</a>
+<a class="btn btn-outline-danger" href="/notes/{{ .note.ID }}" role="button" onclick="sendDelete(event, this.href)">Delete Note</a>   
+{{ end }}
     <!-- Post Content-->
        <article class="mb-4">
         <div class="container px-4 px-lg-5">

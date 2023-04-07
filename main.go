@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"text/template"
 
 	"hamco-template/controllers"
+	"hamco-template/controllers/helpers"
 	"hamco-template/middlewares"
 	"hamco-template/setup"
 
@@ -30,12 +32,15 @@ func serveApplication() {
 
 	r.Use(middlewares.AuthenticateUser())
 
-	r.LoadHTMLGlob("templates/**/*")
+	// Set up a map of functions for templates. This is where we can add our custom functions
+	r.SetFuncMap(template.FuncMap{
+		"truncateWords": helpers.TruncateWords,
+	})
+	r.LoadHTMLGlob("templates/**/**")
 
 	r.GET("/", controllers.Index)
 	r.GET("/contact", controllers.Contact)
 	r.GET("/about", controllers.About)
-	r.GET("/post", controllers.Post)
 	r.GET("/login", controllers.LoginPage)
 	r.GET("/signup", controllers.SignupPage)
 	r.POST("/signup", controllers.Signup)
@@ -48,6 +53,9 @@ func serveApplication() {
 		notes.GET("/new", controllers.NotesNew)
 		notes.POST("/", controllers.NotesCreate)
 		notes.GET("/:id", controllers.NotesShow)
+		notes.GET("/edit/:id", controllers.NotesEditPage)
+		notes.POST("/:id", controllers.NotesUpdate)
+		notes.DELETE("/:id", controllers.NotesDelete)
 	}
 	r.Static("/css", "./static/css")
 	r.Static("/img", "./static/img")

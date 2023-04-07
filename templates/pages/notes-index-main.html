@@ -9,21 +9,31 @@
                 <th>Title</th>
                 <th>Content</th>
                 <th>Published</th>
+                {{ if .logged_in }}
+                <th>Edit Note</th>
+                <th>Delete Note</th>
+                {{ end }}
             </tr>
         </thead>
 
   <tbody>
-    
+      {{ $logged_in := .logged_in }} <!-- Store the logged_in value in a variable for the loop -->
+
       {{ range .notes }}
         <tr>
           <td><a href="/notes/{{ .ID }}">{{ .Title }}</a></td>
-          <td>{{ .Content }}</td>
+          <td>{{ truncateWords .Content 25 }}</td>
           <td> {{ .Published }}</td>
-        </tr>
+            {{ if $logged_in }}
+              <td><a class="btn btn-outline-primary" href="/notes/edit/{{ .ID }}" role="button">Edit Note</a></td>
+              <td><a class="btn btn-outline-danger" href="/notes/{{ .ID }}" role="button" onclick="sendDelete(event, this.href)">Delete Note</a></td>
+            {{ end }}
+          </tr>
       {{ else }}
-        <tr>
+          <tr>
           <td colspan="3">No notes yet</td>
         </tr>
+          
       {{ end }}
     
 </table>

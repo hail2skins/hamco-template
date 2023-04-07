@@ -7,11 +7,11 @@ import (
 )
 
 func GetUserFromRequest(c *gin.Context) *models.User {
-	userID, _ := c.Get("user_id")
+	userID := c.GetUint("user_id")
 
 	var currentUser *models.User
-	if userID != nil {
-		currentUser = models.UserFind(userID.(uint64))
+	if userID > 0 {
+		currentUser = models.UserFind(uint64(userID))
 	} else {
 		currentUser = nil
 	}

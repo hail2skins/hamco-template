@@ -31,6 +31,8 @@ func serveApplication() {
 
 	r.Use(middlewares.AuthenticateUser())
 
+	//r.Use(middlewares.MethodOverride())
+
 	// Set up a map of functions for templates. This is where we can add our custom functions
 	r.SetFuncMap(template.FuncMap{
 		"truncateWords": helpers.TruncateWords,

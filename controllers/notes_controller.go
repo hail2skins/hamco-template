@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
 
 	"github.com/hail2skins/hamcois-new/controllers/helpers"
 	"github.com/hail2skins/hamcois-new/models"
+	"github.com/russross/blackfriday/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,11 +59,20 @@ func NotesShow(c *gin.Context) {
 	}
 	note := models.NotesFind(id)
 	published := note.UpdatedAt.Format("Jan 2, 2006")
+
+	// Render the Markdown content with Blackfriday
+	renderer := blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{})
+	htmlContent := blackfriday.Run([]byte(note.Content),
+		blackfriday.WithRenderer(renderer),
+		blackfriday.WithExtensions(blackfriday.CommonExtensions|blackfriday.HardLineBreak|blackfriday.AutoHeadingIDs|blackfriday.Autolink),
+	)
+
 	c.HTML(
 		http.StatusOK,
 		"note/show.html",
 		gin.H{
 			"note":      note,
+			"content":   template.HTML(htmlContent),
 			"published": published,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},

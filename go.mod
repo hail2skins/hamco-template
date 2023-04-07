@@ -6,6 +6,7 @@ require (
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.9.0
 	github.com/joho/godotenv v1.5.1
+	github.com/russross/blackfriday/v2 v2.1.0
 	golang.org/x/crypto v0.6.0
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11

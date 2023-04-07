@@ -1,8 +1,8 @@
 package setup
 
 import (
-	"hamco-template/database"
-	"hamco-template/models"
+	"github.com/hail2skins/hamco-new/database"
+	"github.com/hail2skins/hamco-new/models"
 )
 
 func LoadDatabase() {

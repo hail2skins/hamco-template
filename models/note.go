@@ -1,7 +1,7 @@
 package models
 
 import (
-	"hamco-template/database"
+	"github.com/hail2skins/hamco-new/database"
 
 	"gorm.io/gorm"
 )

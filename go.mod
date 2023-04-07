@@ -1,4 +1,4 @@
-module hamco-template
+module github.com/hail2skins/hamcois-new
 
 go 1.20
 

@@ -2,7 +2,7 @@
 // It is used in the notes_controller.go and homepage_controller.go files.
 package helpers
 
-import "hamco-template/models"
+import "github.com/hail2skins/hamcois-new/models"
 
 type NoteView struct {
 	models.Note

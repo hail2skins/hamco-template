@@ -1,8 +1,9 @@
 package helpers
 
 import (
-	"hamco-template/models"
 	"net/http"
+
+	"github.com/hail2skins/hamco-new/models"
 
 	"github.com/gin-gonic/gin"
 )

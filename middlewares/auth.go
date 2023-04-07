@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"hamco-template/models"
+	"github.com/hail2skins/hamco-new/models"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

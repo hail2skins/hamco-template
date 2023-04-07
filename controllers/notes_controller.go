@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"fmt"
-	"hamco-template/controllers/helpers"
-	"hamco-template/models"
 	"net/http"
 	"strconv"
+
+	"github.com/hail2skins/hamco-new/controllers/helpers"
+	"github.com/hail2skins/hamco-new/models"
 
 	"github.com/gin-gonic/gin"
 )

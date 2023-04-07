@@ -4,10 +4,10 @@ import (
 	"log"
 	"text/template"
 
-	"hamco-template/controllers"
-	"hamco-template/controllers/helpers"
-	"hamco-template/middlewares"
-	"hamco-template/setup"
+	"github.com/hail2skins/hamco-new/controllers"
+	"github.com/hail2skins/hamco-new/controllers/helpers"
+	"github.com/hail2skins/hamco-new/middlewares"
+	"github.com/hail2skins/hamco-new/setup"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"

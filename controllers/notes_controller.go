@@ -1,14 +1,21 @@
 package controllers
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"net/http"
+	"regexp"
 	"strconv"
 
+	"github.com/PuerkitoBio/goquery"
+	"github.com/alecthomas/chroma/quick"
 	"github.com/hail2skins/hamcois-new/controllers/helpers"
 	"github.com/hail2skins/hamcois-new/models"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
+	"github.com/shurcooL/github_flavored_markdown"
+	"github.com/yosssi/gohtml"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,15 +64,11 @@ func NotesShow(c *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error parsing note id: %v\n", err)
 	}
+
 	note := models.NotesFind(id)
 	published := note.UpdatedAt.Format("Jan 2, 2006")
 
-	// Render the Markdown content with Blackfriday
-	renderer := blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{})
-	htmlContent := blackfriday.Run([]byte(note.Content),
-		blackfriday.WithRenderer(renderer),
-		blackfriday.WithExtensions(blackfriday.CommonExtensions|blackfriday.HardLineBreak|blackfriday.AutoHeadingIDs|blackfriday.Autolink),
-	)
+	htmlContent := renderMarkdown(note.Content)
 
 	c.HTML(
 		http.StatusOK,
@@ -77,6 +80,82 @@ func NotesShow(c *gin.Context) {
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
+}
+
+func renderMarkdown(noteContent string) string {
+	unsafeHTML := runBlackFriday(noteContent)
+	htmlContent := sanitizeHTML(unsafeHTML)
+	preWrappedHTML := wrapPreCodeTags(htmlContent)
+	gfmHTML := renderGFM(preWrappedHTML)
+	highlightedHTML := highlightCodeBlocks(gfmHTML)
+	formattedHTML := formatHTML(highlightedHTML)
+
+	return formattedHTML
+}
+
+func runBlackFriday(noteContent string) []byte {
+	renderer := blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{})
+	unsafeHTML := blackfriday.Run([]byte(noteContent),
+		blackfriday.WithRenderer(renderer),
+		blackfriday.WithExtensions(
+			blackfriday.CommonExtensions|
+				blackfriday.HardLineBreak|
+				blackfriday.AutoHeadingIDs|
+				blackfriday.Autolink|
+				blackfriday.FencedCode|
+				blackfriday.Footnotes,
+		),
+	)
+
+	return unsafeHTML
+}
+
+func sanitizeHTML(unsafeHTML []byte) []byte {
+	p := bluemonday.UGCPolicy()
+	p.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
+	htmlContent := p.SanitizeBytes(unsafeHTML)
+
+	return htmlContent
+}
+
+func wrapPreCodeTags(htmlContent []byte) []byte {
+	preWrappedHTML := bytes.ReplaceAll(htmlContent, []byte("<code>"), []byte("<pre><code>"))
+	preWrappedHTML = bytes.ReplaceAll(preWrappedHTML, []byte("</code>"), []byte("</code></pre>"))
+
+	return preWrappedHTML
+}
+
+func renderGFM(preWrappedHTML []byte) []byte {
+	gfmHTML := github_flavored_markdown.Markdown(preWrappedHTML)
+
+	return gfmHTML
+}
+
+func highlightCodeBlocks(gfmHTML []byte) []byte {
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(gfmHTML))
+	if err != nil {
+		return gfmHTML
+	}
+
+	doc.Find("pre code").Each(func(i int, s *goquery.Selection) {
+		code := s.Text()
+
+		var b bytes.Buffer
+		err := quick.Highlight(&b, code, "go", "html", "monokai")
+		if err == nil {
+			s.SetHtml(b.String())
+		}
+	})
+
+	highlightedHTML, _ := doc.Html()
+
+	return []byte(highlightedHTML)
+}
+
+func formatHTML(highlightedHTML []byte) string {
+	formattedHTML := gohtml.Format(string(highlightedHTML))
+
+	return formattedHTML
 }
 
 func NotesEditPage(c *gin.Context) {

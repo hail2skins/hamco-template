@@ -202,7 +202,10 @@ dd {
 }
 
 blockquote {
-  margin: 0 0 1rem;
+  border-left: 5px solid #ddd !important;
+  margin: 1.5em 10px !important;
+  padding: 0.5em 10px !important;
+  color: #aaa !important;
 }
 
 b,
@@ -258,26 +261,34 @@ samp {
   unicode-bidi: bidi-override;
 }
 
-pre {
-  display: block;
-  margin-top: 0;
-  margin-bottom: 1rem;
+pre, pre code {
+  position: relative;
+  padding: 1em;
+  margin: 1em 0;
   overflow: auto;
-  font-size: 0.875em;
-}
-pre code {
-  font-size: inherit;
-  color: inherit;
-  word-break: normal;
+  border: 1px solid #ddd;
+  background-color: #000;
 }
 
 code {
-  font-size: 0.875em;
-  color: #d63384;
-  word-wrap: break-word;
+  font-family: Monaco, monospace;
+  line-height: 100%;
+  background-color: #eee !important;
+  padding: 0.2em;
+  letter-spacing: -0.05em;
+  word-break: normal;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0;
+  white-space: pre;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
-a > code {
-  color: inherit;
+
+
+code {
+  word-break: normal;
+  border-radius: 5px;
 }
 
 kbd {

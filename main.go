@@ -21,9 +21,9 @@ func main() {
 
 func serveApplication() {
 	r := gin.Default()
-	//r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	//r := gin.New() // I think default turns on logger and recovery automatically and new doesn't.
+	//r.Use(gin.Logger())  // These are brought in by default
+	//r.Use(gin.Recovery()) // These are brought in by default
 
 	// Sessions init
 	store := memstore.NewStore([]byte("secret"))
@@ -66,8 +66,5 @@ func serveApplication() {
 	r.StaticFile("/favicon.ico", "./img/favicon.ico")
 
 	log.Println("Server started")
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-
-	//r.Run(":8000")
-	//fmt.Println("Server running on port 8000")
+	r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

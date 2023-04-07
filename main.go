@@ -4,14 +4,13 @@ import (
 	"log"
 	"text/template"
 
-	"github.com/hail2skins/hamco-new/controllers"
-	"github.com/hail2skins/hamco-new/controllers/helpers"
-	"github.com/hail2skins/hamco-new/middlewares"
-	"github.com/hail2skins/hamco-new/setup"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
+	"github.com/hail2skins/hamcois-new/controllers"
+	"github.com/hail2skins/hamcois-new/controllers/helpers"
+	"github.com/hail2skins/hamcois-new/middlewares"
+	"github.com/hail2skins/hamcois-new/setup"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package helpers
 import (
 	"net/http"
 
-	"github.com/hail2skins/hamco-new/models"
+	"github.com/hail2skins/hamcois-new/models"
 
 	"github.com/gin-gonic/gin"
 )

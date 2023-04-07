@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/hail2skins/hamco-new/controllers/helpers"
-	"github.com/hail2skins/hamco-new/models"
-
 	"github.com/gin-gonic/gin"
+
+	"github.com/hail2skins/hamcois-new/controllers/helpers"
+	"github.com/hail2skins/hamcois-new/models"
 )
 
 // NoteView is a struct to hold the note and the published date which is formatted in the Index function

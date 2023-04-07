@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/hail2skins/hamco-new/controllers/helpers"
-	"github.com/hail2skins/hamco-new/models"
+	"github.com/hail2skins/hamcois-new/controllers/helpers"
+	"github.com/hail2skins/hamcois-new/models"
 
 	"github.com/gin-gonic/gin"
 )

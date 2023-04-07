@@ -1,10 +1,9 @@
 package middlewares
 
 import (
-	"github.com/hail2skins/hamco-new/models"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/hail2skins/hamcois-new/models"
 )
 
 func AuthenticateUser() gin.HandlerFunc {

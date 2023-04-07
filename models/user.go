@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/hail2skins/hamco-new/database"
-	"github.com/hail2skins/hamco-new/helpers"
+	"github.com/hail2skins/hamcois-new/database"
+	"github.com/hail2skins/hamcois-new/helpers"
 
 	"gorm.io/gorm"
 )

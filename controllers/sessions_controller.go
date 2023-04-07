@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	tempHelpers "github.com/hail2skins/hamco-new/controllers/helpers"
-	"github.com/hail2skins/hamco-new/helpers"
-	"github.com/hail2skins/hamco-new/models"
+	tempHelpers "github.com/hail2skins/hamcois-new/controllers/helpers"
+	"github.com/hail2skins/hamcois-new/helpers"
+	"github.com/hail2skins/hamcois-new/models"
 
 	"github.com/gin-gonic/gin"
 )

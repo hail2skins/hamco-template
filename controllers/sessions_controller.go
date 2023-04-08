@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	tempHelpers "github.com/hail2skins/hamcois-new/controllers/helpers"
 	"github.com/hail2skins/hamcois-new/helpers"
 	"github.com/hail2skins/hamcois-new/models"
 
@@ -27,7 +28,7 @@ func SignupPage(c *gin.Context) {
 }
 
 func Signup(c *gin.Context) {
-	/* method to make signup not work.
+	// method to make signup not work.
 	// Declare the currentUser variable
 	currentUser := tempHelpers.GetUserFromRequest(c)
 	// Check if the user is logged in
@@ -41,7 +42,7 @@ func Signup(c *gin.Context) {
 		)
 		return
 	}
-	*/
+	// Comment to here to make signup work.
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 	confirm_password := c.PostForm("confirm_password")

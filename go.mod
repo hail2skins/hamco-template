@@ -9,7 +9,6 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/joho/godotenv v1.5.1
 	github.com/microcosm-cc/bluemonday v1.0.23
-	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	github.com/yuin/goldmark v1.5.4
 	golang.org/x/crypto v0.6.0

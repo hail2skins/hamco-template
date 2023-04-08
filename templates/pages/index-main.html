@@ -18,7 +18,8 @@
                     {{ .Published }}
                 </p>
                 <!-- Divider-->
-                    <hr class="my-4" />
+                <hr class="my-4" />
+                <a class="btn btn-outline-primary" href="/notes/{{ .ID }}" role="button">View Note</a>
                 {{ if $logged_in }}
                 <a class="btn btn-outline-primary" href="/notes/edit/{{ .ID }}" role="button">Edit Note</a>
                 <a class="btn btn-outline-danger" href="/notes/{{ .ID }}" role="button" onclick="sendDelete(event, this.href)">Delete Note</a>

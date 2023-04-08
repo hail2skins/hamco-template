@@ -13,9 +13,11 @@ import (
 	"github.com/hail2skins/hamcois-new/controllers/helpers"
 	"github.com/hail2skins/hamcois-new/models"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday/v2"
-	"github.com/shurcooL/github_flavored_markdown"
 	"github.com/yosssi/gohtml"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 
 	"github.com/gin-gonic/gin"
 )
@@ -83,36 +85,38 @@ func NotesShow(c *gin.Context) {
 }
 
 func renderMarkdown(noteContent string) string {
-	unsafeHTML := runBlackFriday(noteContent)
+	unsafeHTML := parseMarkdown(noteContent)
 	htmlContent := sanitizeHTML(unsafeHTML)
 	preWrappedHTML := wrapPreCodeTags(htmlContent)
-	gfmHTML := renderGFM(preWrappedHTML)
-	highlightedHTML := highlightCodeBlocks(gfmHTML)
+	highlightedHTML := highlightCodeBlocks(preWrappedHTML)
 	formattedHTML := formatHTML(highlightedHTML)
 
 	return formattedHTML
 }
 
-func runBlackFriday(noteContent string) []byte {
-	renderer := blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{})
-	unsafeHTML := blackfriday.Run([]byte(noteContent),
-		blackfriday.WithRenderer(renderer),
-		blackfriday.WithExtensions(
-			blackfriday.CommonExtensions|
-				blackfriday.HardLineBreak|
-				blackfriday.AutoHeadingIDs|
-				blackfriday.Autolink|
-				blackfriday.FencedCode|
-				blackfriday.Footnotes,
+func parseMarkdown(noteContent string) []byte {
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithHardWraps(),
+			html.WithXHTML(),
 		),
 	)
 
-	return unsafeHTML
+	var buf bytes.Buffer
+	if err := md.Convert([]byte(noteContent), &buf); err != nil {
+		panic(err)
+	}
+	return buf.Bytes()
 }
 
 func sanitizeHTML(unsafeHTML []byte) []byte {
 	p := bluemonday.UGCPolicy()
-	p.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code")
+	p.AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("chroma")
+	p.AllowElements("blockquote")
 	htmlContent := p.SanitizeBytes(unsafeHTML)
 
 	return htmlContent
@@ -123,12 +127,6 @@ func wrapPreCodeTags(htmlContent []byte) []byte {
 	preWrappedHTML = bytes.ReplaceAll(preWrappedHTML, []byte("</code>"), []byte("</code></pre>"))
 
 	return preWrappedHTML
-}
-
-func renderGFM(preWrappedHTML []byte) []byte {
-	gfmHTML := github_flavored_markdown.Markdown(preWrappedHTML)
-
-	return gfmHTML
 }
 
 func highlightCodeBlocks(gfmHTML []byte) []byte {

@@ -9,10 +9,10 @@ import (
 )
 
 var Database *gorm.DB
-var appEnv = os.Getenv("APP_ENV")
 
 func Connect() {
 	var err error
+	appEnv := os.Getenv("APP_ENV")
 	host := os.Getenv("DB_HOST")
 	username := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")

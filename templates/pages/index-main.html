@@ -10,13 +10,15 @@
                 {{ range .notes }}
                 <a href="/notes/{{ .ID }}">
                     <h2 class="post-title">{{ .Title }}</h2>
-                    <p>{{ truncateWords .Content 50 }}<p>
+                    <p>{{ .Content }}<p>
                 </a>
                 <p class="post-meta">
                     Posted by
                     <a href="/about">Art Mills</a>
                     {{ .Published }}
                 </p>
+                <!-- Divider-->
+                    <hr class="my-4" />
                 {{ if $logged_in }}
                 <a class="btn btn-outline-primary" href="/notes/edit/{{ .ID }}" role="button">Edit Note</a>
                 <a class="btn btn-outline-danger" href="/notes/{{ .ID }}" role="button" onclick="sendDelete(event, this.href)">Delete Note</a>

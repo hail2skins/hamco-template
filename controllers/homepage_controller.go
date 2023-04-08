@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"html/template"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,11 @@ type HomeNoteView struct {
 func Index(c *gin.Context) {
 	notes := models.NotesLastFive()
 	noteViews := helpers.NotesToNoteViews(notes)
+	// Render the content of each note using Goldmark
+	for i := range noteViews {
+		truncatedContent := helpers.TruncateWords(string(noteViews[i].Content), 50) // Limit to 50 words, for example
+		noteViews[i].Content = template.HTML(truncatedContent)
+	}
 	c.HTML(
 		http.StatusOK,
 		"home/index.html",
@@ -27,10 +33,6 @@ func Index(c *gin.Context) {
 			"logged_in": c.MustGet("logged_in").(bool),
 			"notes":     noteViews, // Pass the slice of NoteView structs to the template rather than the notes directly
 		})
-	//	fmt.Println(c.GetUint64("user_id")) // Unnecssary code check but leaving for later possible use
-	//	fmt.Println(c.Get("user_id")) // Also unnecessary code check but leaving for later possible use
-	// fmt.Println(c.GetUint("user_id")) // Also unnecessary code check but leaving for later possible use
-
 }
 
 func About(c *gin.Context) {

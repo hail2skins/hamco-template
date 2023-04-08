@@ -25,6 +25,11 @@ import (
 func NotesIndex(c *gin.Context) {
 	notes := models.NotesAll()
 	noteViews := helpers.NotesToNoteViews(notes)
+	// Render the content of each note using Goldmark
+	for i := range noteViews {
+		truncatedContent := helpers.TruncateWords(string(noteViews[i].Content), 25) // Limit to 25 words, for example
+		noteViews[i].Content = template.HTML(truncatedContent)
+	}
 	c.HTML(
 		http.StatusOK,
 		"note/index.html",

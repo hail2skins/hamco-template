@@ -70,7 +70,7 @@ func Signup(c *gin.Context) {
 		)
 		return
 	}
-	user := models.UserCreate(email, password)
+	user, _ := models.UserCreate(email, password)
 	if user.ID == 0 {
 		c.HTML(
 			http.StatusNotAcceptable,
@@ -89,7 +89,7 @@ func Login(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
-	user := models.UserFindByEmailAndPassword(email, password)
+	user, _ := models.UserFindByEmailAndPassword(email, password)
 	if user != nil {
 		helpers.SessionSet(c, uint64(user.ID))
 		c.Redirect(http.StatusMovedPermanently, "/")

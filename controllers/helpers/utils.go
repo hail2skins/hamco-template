@@ -11,7 +11,7 @@ func GetUserFromRequest(c *gin.Context) *models.User {
 
 	var currentUser *models.User
 	if userID > 0 {
-		currentUser = models.UserFind(uint64(userID))
+		currentUser, _ = models.UserFind(uint64(userID))
 	} else {
 		currentUser = nil
 	}

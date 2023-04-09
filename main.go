@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hail2skins/hamcois-new/controllers"
 	"github.com/hail2skins/hamcois-new/controllers/helpers"
+	h "github.com/hail2skins/hamcois-new/helpers"
 	"github.com/hail2skins/hamcois-new/middlewares"
 	"github.com/hail2skins/hamcois-new/setup"
 )
@@ -25,11 +26,18 @@ func serveApplication() {
 	//r.Use(gin.Logger())  // These are brought in by default
 	//r.Use(gin.Recovery()) // These are brought in by default
 
+	// New Relic init
+	app, err := h.NewRelicApp()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Sessions init
 	store := memstore.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("notes", store))
 
 	r.Use(middlewares.AuthenticateUser())
+	r.Use(middlewares.NewRelicMiddleware(app))
 
 	//r.Use(middlewares.MethodOverride())
 

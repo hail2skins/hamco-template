@@ -19,7 +19,7 @@ func AuthenticateUser() gin.HandlerFunc {
 		if sessionID == nil {
 			userPresent = false
 		} else {
-			user = models.UserFind(sessionID.(uint64))
+			user, _ = models.UserFind(sessionID.(uint64))
 			userPresent = (user.ID > 0)
 		}
 

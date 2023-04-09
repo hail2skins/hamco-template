@@ -5,6 +5,7 @@ import (
 
 	"github.com/hail2skins/hamcois-new/database"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSloganCreate(t *testing.T) {
@@ -17,7 +18,10 @@ func TestSloganCreate(t *testing.T) {
 
 	// Create a test slogan
 	sloganText := "Test slogan for Go test"
-	slogan := SloganCreate(testUser, sloganText)
+	slogan, err := SloganCreate(testUser, sloganText)
+
+	// Ensure there's no error during slogan creation
+	require.NoError(t, err, "Slogan creation should not return an error")
 
 	// Test the slogan
 	assert.NotNil(t, slogan, "Slogan should not be nil")

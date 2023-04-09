@@ -13,14 +13,14 @@ type Slogan struct {
 	UserID uint   `gorm:"notnull" json:"-"`
 }
 
-func SloganCreate(user *User, slogan string) *Slogan {
+func SloganCreate(user *User, slogan string) (*Slogan, error) {
 	entry := Slogan{Slogan: slogan, UserID: user.ID}
 	result := database.Database.Create(&entry)
 	if result.Error != nil {
-		log.Fatalf("Error creating slogan: %v", result.Error)
+		log.Printf("Error creating slogan: %v", result.Error)
+		return nil, result.Error
 	}
 
 	log.Printf("Slogan created: ID: %d, Slogan: %s, UserID: %d\n", entry.ID, entry.Slogan, entry.UserID)
-
-	return &entry
+	return &entry, nil
 }

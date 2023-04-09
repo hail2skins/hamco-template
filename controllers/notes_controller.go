@@ -84,6 +84,7 @@ func NotesShow(c *gin.Context) {
 			"note":      note,
 			"content":   template.HTML(htmlContent),
 			"published": published,
+			"title":     note.Title,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)

@@ -12,18 +12,28 @@ import (
 )
 
 func LoginPage(c *gin.Context) {
+	slogan := tempHelpers.GetRandomSloganOrDefault()
+
 	c.HTML(
 		http.StatusOK,
 		"home/login.html",
-		gin.H{},
+		gin.H{
+			"title":  "Login",
+			"slogan": slogan,
+		},
 	)
 }
 
 func SignupPage(c *gin.Context) {
+	slogan := tempHelpers.GetRandomSloganOrDefault()
+
 	c.HTML(
 		http.StatusOK,
 		"home/signup.html",
-		gin.H{},
+		gin.H{
+			"title":  "Signup",
+			"slogan": slogan,
+		},
 	)
 }
 

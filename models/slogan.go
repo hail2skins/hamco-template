@@ -38,3 +38,11 @@ func SloganFind(id uint64) (*Slogan, error) {
 	}
 	return &slogan, nil
 }
+
+func RandomSlogan() (string, error) {
+	var slogan Slogan
+	if err := database.Database.Order("random()").First(&slogan).Error; err != nil {
+		return "", err
+	}
+	return slogan.Slogan, nil
+}

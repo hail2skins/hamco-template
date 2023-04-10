@@ -9,11 +9,14 @@ import (
 )
 
 func SloganNew(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	c.HTML(
 		http.StatusOK,
 		"slogan/new.html",
 		gin.H{
 			"title":     "New Slogan",
+			"slogan":    slogan,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)

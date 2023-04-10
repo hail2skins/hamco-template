@@ -20,6 +20,8 @@ type HomeNoteView struct {
 func Index(c *gin.Context) {
 	notes, _ := models.NotesLastFive()
 	noteViews := helpers.NotesToNoteViews(notes)
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	// Render the content of each note using Goldmark
 	for i := range noteViews {
 		truncatedContent := helpers.TruncateWords(string(noteViews[i].Content), 50) // Limit to 50 words, for example
@@ -32,26 +34,32 @@ func Index(c *gin.Context) {
 			"title":     "Hamco Internet Solutions",
 			"logged_in": c.MustGet("logged_in").(bool),
 			"notes":     noteViews, // Pass the slice of NoteView structs to the template rather than the notes directly
+			"slogan":    slogan,
 		})
 }
 
 func About(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
 	c.HTML(
 		http.StatusOK,
 		"home/about.html",
 		gin.H{
 			"title":     "About",
 			"logged_in": c.MustGet("logged_in").(bool), // This is the correct way to get the value from the gin.Context
+			"slogan":    slogan,
 		},
 	)
 }
 
 func Contact(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	c.HTML(
 		http.StatusOK,
 		"home/contact.html",
 		gin.H{
-			"title": "Contact",
+			"title":  "Contact",
+			"slogan": slogan,
 		},
 	)
 }

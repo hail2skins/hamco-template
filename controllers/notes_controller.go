@@ -24,6 +24,8 @@ import (
 
 func NotesIndex(c *gin.Context) {
 	notes, err := models.NotesAll()
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	if err != nil {
 		// Handle the error, e.g., log it and return an error response
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching notes"})
@@ -42,17 +44,21 @@ func NotesIndex(c *gin.Context) {
 			// Pass the slice of NoteView structs to the template rather than the notes directly
 			"notes":     noteViews,
 			"title":     "All the thoughts",
+			"slogan":    slogan,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
 }
 
 func NotesNew(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	c.HTML(
 		http.StatusOK,
 		"note/new.html",
 		gin.H{
 			"title":     "New Note",
+			"slogan":    slogan,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
@@ -72,6 +78,8 @@ func NotesCreate(c *gin.Context) {
 }
 
 func NotesShow(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
@@ -91,6 +99,7 @@ func NotesShow(c *gin.Context) {
 			"content":   template.HTML(htmlContent),
 			"published": published,
 			"title":     note.Title,
+			"slogan":    slogan,
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
@@ -169,6 +178,8 @@ func formatHTML(highlightedHTML []byte) string {
 }
 
 func NotesEditPage(c *gin.Context) {
+	slogan := helpers.GetRandomSloganOrDefault()
+
 	currentUser := helpers.RequireLoggedInUser(c)
 	if currentUser != nil {
 		idStr := c.Param("id")
@@ -184,6 +195,7 @@ func NotesEditPage(c *gin.Context) {
 			"note/edit.html",
 			gin.H{
 				"note":      note,
+				"slogan":    slogan,
 				"logged_in": c.MustGet("logged_in").(bool),
 			},
 		)

@@ -23,8 +23,13 @@ import (
 )
 
 func NotesIndex(c *gin.Context) {
-	notes := models.NotesAll()
-	noteViews := helpers.NotesToNoteViews(notes)
+	notes, err := models.NotesAll()
+	if err != nil {
+		// Handle the error, e.g., log it and return an error response
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching notes"})
+		return
+	}
+	noteViews := helpers.NotesToNoteViews(&notes)
 	// Render the content of each note using Goldmark
 	for i := range noteViews {
 		truncatedContent := helpers.TruncateWords(string(noteViews[i].Content), 25) // Limit to 25 words, for example
@@ -36,6 +41,7 @@ func NotesIndex(c *gin.Context) {
 		gin.H{
 			// Pass the slice of NoteView structs to the template rather than the notes directly
 			"notes":     noteViews,
+			"title":     "All the thoughts",
 			"logged_in": c.MustGet("logged_in").(bool),
 		},
 	)
@@ -72,7 +78,7 @@ func NotesShow(c *gin.Context) {
 		fmt.Printf("Error parsing note id: %v\n", err)
 	}
 
-	note := models.NotesFind(id)
+	note, _ := models.NotesFind(id)
 	published := note.UpdatedAt.Format("Jan 2, 2006")
 
 	htmlContent := renderMarkdown(note.Content)
@@ -172,7 +178,7 @@ func NotesEditPage(c *gin.Context) {
 			fmt.Printf("Error parsing note id: %v\n", err)
 		}
 		//fmt.Printf("Parsed ID: %d\n", id) // Debugging statement
-		note := models.NotesFindByUser(currentUser, id)
+		note, _ := models.NotesFindByUser(currentUser, id)
 		c.HTML(
 			http.StatusOK,
 			"note/edit.html",
@@ -192,7 +198,7 @@ func NotesUpdate(c *gin.Context) {
 		if err != nil {
 			fmt.Printf("Error parsing note id: %v\n", err)
 		}
-		note := models.NotesFindByUser(currentUser, id)
+		note, _ := models.NotesFindByUser(currentUser, id)
 		title := c.PostForm("title")
 		content := c.PostForm("content")
 		note.Update(title, content)

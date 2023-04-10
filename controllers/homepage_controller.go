@@ -18,7 +18,7 @@ type HomeNoteView struct {
 }
 
 func Index(c *gin.Context) {
-	notes := models.NotesLastFive()
+	notes, _ := models.NotesLastFive()
 	noteViews := helpers.NotesToNoteViews(notes)
 	// Render the content of each note using Goldmark
 	for i := range noteViews {

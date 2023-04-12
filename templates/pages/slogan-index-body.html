@@ -1,0 +1,18 @@
+{{ define "pages/slogan-index-body.html" }}        
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('/img/hammy1.png')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>Goofy things I say</h1>
+                            <h2 class="subheading">{{ .slogan }}</h2>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    {{ if .alert }}
+        <div class="alert alert-primary" role="alert">{{ .alert }}</div>
+    {{ end }}
+{{ end }}

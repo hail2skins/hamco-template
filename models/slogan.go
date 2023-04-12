@@ -14,6 +14,15 @@ type Slogan struct {
 	UserID uint   `gorm:"notnull" json:"-"`
 }
 
+func SloganAll() ([]Slogan, error) {
+	var slogans []Slogan
+	result := database.Database.Where("deleted_at is NULL").Order("updated_at desc").Find(&slogans)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return slogans, nil
+}
+
 func SloganCreate(user *User, slogan string) (*Slogan, error) {
 	entry := Slogan{Slogan: slogan, UserID: user.ID}
 	result := database.Database.Create(&entry)
@@ -39,6 +48,7 @@ func SloganFind(id uint64) (*Slogan, error) {
 	return &slogan, nil
 }
 
+// RandomSlogan returns a random slogan from the database designed for use in views through controllers
 func RandomSlogan() (string, error) {
 	var slogan Slogan
 	if err := database.Database.Order("random()").First(&slogan).Error; err != nil {

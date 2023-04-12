@@ -1,0 +1,37 @@
+{{ define "pages/slogan-index-main.html" }}    
+    
+    <!-- Slogan index-->
+    <h1>Listing Slogans</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Slogan</th>
+                {{ if .logged_in }}
+                <th>Edit Slogan</th>
+                <th>Delete Slogan</th>
+                {{ end }}
+            </tr>
+        </thead>
+
+  <tbody>
+      {{ $logged_in := .logged_in }} <!-- Store the logged_in value in a variable for the loop -->
+
+      {{ range .slogans }}
+        <tr>
+          <td><a href="/slogan/{{ .ID }}">{{ .Slogan }}</a></td>
+            {{ if $logged_in }}
+              <td><a class="btn btn-outline-primary" href="/slogan/edit/{{ .ID }}" role="button">Edit Slogan</a></td>
+              <td><a class="btn btn-outline-danger" href="/slogan/{{ .ID }}" role="button" onclick="sendDelete(event, this.href)">Delete Slogan</a></td>
+            {{ end }}
+          </tr>
+      {{ else }}
+          <tr>
+          <td colspan="3">No slogans yet</td>
+        </tr>
+          
+      {{ end }}
+    
+</table>
+
+{{ end }}

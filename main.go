@@ -1,14 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 	"github.com/hail2skins/hamcois-new/controllers"
 	"github.com/hail2skins/hamcois-new/middlewares"
+	"github.com/hail2skins/hamcois-new/models"
 	"github.com/hail2skins/hamcois-new/setup"
+	"github.com/hail2skins/hamcois-new/sitemap"
 )
 
 func main() {
@@ -58,6 +63,7 @@ func serveApplication() {
 
 	slogans := r.Group("/slogans")
 	{
+		slogans.GET("/", controllers.SloganIndex)
 		slogans.GET("/new", controllers.SloganNew)
 		slogans.POST("/", controllers.SloganCreate)
 	}
@@ -68,6 +74,42 @@ func serveApplication() {
 	r.Static("/vendor", "./static/vendor")
 	r.Static("/js", "./static/js")
 	r.StaticFile("/favicon.ico", "./img/favicon.ico")
+
+	// Sitemap route
+	r.GET("/sitemap.xml", func(c *gin.Context) {
+		// Retrieve all notes from the database
+		notes, err := models.NotesAll()
+		if err != nil {
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		urls := []sitemap.URL{
+			{Loc: "https://hamcois.com/", LastMod: time.Now(), ChangeFreq: "daily", Priority: 1.0},
+			{Loc: "https://hamcois.com/notes", LastMod: time.Now(), ChangeFreq: "daily", Priority: 0.9},
+			{Loc: "https://hamcois.com/about", LastMod: time.Now(), ChangeFreq: "daily", Priority: 0.9},
+
+			// Add more static URLs as needed
+		}
+
+		// Generate URLs for individual notes
+		for _, note := range notes {
+			urls = append(urls, sitemap.URL{
+				Loc:        fmt.Sprintf("https://hamcois.com/notes/%d", note.ID),
+				LastMod:    note.UpdatedAt,
+				ChangeFreq: "weekly",
+				Priority:   0.8,
+			})
+		}
+
+		urlSet := sitemap.NewURLSet(urls)
+		xmlBytes, err := urlSet.ToXML()
+		if err != nil {
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+		c.Data(http.StatusOK, "application/xml", xmlBytes)
+	})
 
 	log.Println("Server started")
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

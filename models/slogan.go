@@ -56,3 +56,13 @@ func RandomSlogan() (string, error) {
 	}
 	return slogan.Slogan, nil
 }
+
+func (slogan *Slogan) Update(slogantext string) error {
+	slogan.Slogan = slogantext
+	result := database.Database.Save(&slogan)
+	if result.Error != nil {
+		log.Printf("Error updating slogan: %v", result.Error)
+		return result.Error
+	}
+	return nil
+}

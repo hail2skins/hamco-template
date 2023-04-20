@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -29,7 +30,7 @@ func serveApplication() {
 	//r.Use(gin.Recovery()) // These are brought in by default
 
 	// Sessions init
-	store := memstore.NewStore([]byte("secret"))
+	store := memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
 	r.Use(sessions.Sessions("notes", store))
 	r.Use(sessions.Sessions("slogans", store))
 
